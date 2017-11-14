@@ -44,20 +44,22 @@ To start using it you must create a **developer** account on the
 Then create an application. But beware on one things: the **redirect url** must differ from any `localhost` or local url.
 Since we want to trick it, do as follow:
 
-- pick a domain name such `http://my-own-cloud.io:8080` (**do not use https as it cannot be handled later**)
+- pick a domain name such `http://myowncloud.io:8080` (**do not use https as it cannot be handled later**)
 - create the application
-- map the **domain** `my-own-cloud.io` on `localhost` in your **host file** ( `/etc/hosts` for linux,
+- map the **domain** `myowncloud.io` on `localhost` in your **host file** ( `/etc/hosts` for linux,
     `%systemroot%\\system32\\drivers\\etc\\` for windows)
 - run the following code
 
 
 .. code-block:: python
 
-    # provide the client id and client secret got on your application page
-    api_manager = ApiManager(client_id, client_secret)
     # in this example the redirect url  is http://myowncloud.io:8080 and /etc/hosts contains the line
     # 127.0.0.1       myowncloud.io
     redirect_uri = 'http://myowncloud.io:8080'
+
+    # provide the client id, client secret and redirect URI got on your application page
+    api_manager = ApiManager(client_id, client_secret, redirect_uri)
+    
     url_to_open = api_manager.init_authorize_code_process(redirect_uri=redirect_uri, state='1234')
     print 'Open this URL: %s' % url_to_open
     code = api_manager.wait_and_terminate_authorize_code_process()
@@ -71,7 +73,7 @@ You can save your `refresh token`. Next time you can instantiate the `ApiManager
 
 .. code-block:: python
 
-    api_manager = ApiManager(client_id, client_secret)
+    api_manager = ApiManager(client_id, client_secret, redirect_uri)
     api_manager.init_with_token(refresh_token)
 
 You are now fully able to use the api.
